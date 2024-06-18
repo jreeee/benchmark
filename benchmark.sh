@@ -63,16 +63,36 @@ strip-data () {
     it_end=$(echo "$TEST_DURATION + $TEST_START" | bc)
     while [ $it -lt $it_end ]
     do
-        echo -e $(cut -d$'\n' $vktmp -f $it | cut -d " " -f 9)\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 9) >> "$BENCH_DATA/ms-$1"
+        echo -e $(echo "($it - $TEST_START) * 10" | bc -l)\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 9)  >> "$BENCH_DATA/ms-$1"
         # alternative
-        echo -e $(cut -d$'\n' $vktmp -f $it | cut -d " " -f 11)\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
+        # echo -e $(echo "($it - $TEST_START) * 10" | bc -l\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
+        ((it++))
+    done
+    echo -e "\n\n" >> "$BENCH_DATA/ms-$1"
+    
+    it=$TEST_START
+    while [ $it -lt $it_end ]
+    do
+        echo -e $(echo "($it - $TEST_START) * 10" | bc -l)\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 9) >> "$BENCH_DATA/ms-$1"
+        # alternative
+        # echo -e $(echo "($it - $TEST_START) * 10" | bc -l\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
         ((it++))
     done
     # optional for fps
-    sed -i 's/(//g' "$BENCH_DATA/fps-$1"
+    # sed -i 's/(//g' "$BENCH_DATA/fps-$1"
+
 }
 
-bench-variants() {
+graph-data () {
+    # todo grab data from the info and transfer it here
+    graph_file="$BENCH_TMP/graph-$1.dat"
+    cp "$BENCH_GRAPHS/base.dat" "$graph_file"
+    sed -i 's/FILENAME/'$1'/g' "$graph_file"
+    cd "$BENCH_BASE_DIR"
+    gnuplot -p "$graph_file"
+} 
+
+bench-variants () {
     loginfo="$BENCH_LOGS/info-$2.log"
     echo "run: $2 model: $1 | UB: $UPLOAD_BUDGET RB: $RENDER_BUDGET TS: $TEST_START TD: $TEST_DURATION" >> $loginfo
     cat $loginfo
@@ -87,15 +107,20 @@ bench-variants() {
     # ------------------------
     echo "[info] both runs have finished, processing data"
     strip-data $log_stamp
+    graph-data $log_stamp
 }
 
 
 # rebuild
-log_stamp=$(date +%m-%d-%H-%M-%S)
-bench-variants $MODEL_1 $log_stamp
-log_stamp=$(date +%m-%d-%H-%M-%S)
-bench-variants $MODEL_2 $log_stamp
-log_stamp=$(date +%m-%d-%H-%M-%S)
-bench-variants $MODEL_3 $log_stamp
-log_stamp=$(date +%m-%d-%H-%M-%S)
-bench-variants $MODEL_4 $log_stamp
+main () {
+    log_stamp=$(date +%m-%d-%H-%M-%S)
+    bench-variants $MODEL_1 $log_stamp
+    log_stamp=$(date +%m-%d-%H-%M-%S)
+    bench-variants $MODEL_2 $log_stamp
+    log_stamp=$(date +%m-%d-%H-%M-%S)
+    bench-variants $MODEL_3 $log_stamp
+    log_stamp=$(date +%m-%d-%H-%M-%S)
+    bench-variants $MODEL_4 $log_stamp
+}
+
+main
