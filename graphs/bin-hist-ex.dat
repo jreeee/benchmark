@@ -1,24 +1,14 @@
 reset
-
-#number of intervals, could be like frames/20?
+#number of intervals, could be like datapoints
 n=200 
-
-#minmaxing
-stats "tmp/INFILE1" u 2
-min=STATS_min
-max=STATS_max
-stats "tmp/INFILE2" u 2
-if (min > STATS_min) min=STATS_min
-if (max < STATS_max) max=STATS_max
-min=(min-.2)
-max=(max+.2)
-
+min=2.3 #min value
+max=2.8 #max value
 width=(max-min)/n #interval width
 ofs=width/4
 #function used to map a value to the intervals
 hist(x,width)=width*floor(x/width)+width/2.0
 set term png #output terminal and file
-set output "graphs/graph-FILENAME.png"
+set output "histogram.png"
 set xrange [min:max]
 set yrange [0:]
 #to put an empty boundary around the
@@ -29,12 +19,12 @@ set boxwidth width*0.2 #relative
 set style fill solid 0.7 #fillstyle
 set tics out nomirror
 set xlabel "frametime in ms"
-set ylabel "Occurrences sampled over TOTAL frames"
+set ylabel "Occurrences sampled over 5000 frames"
 #count and plot
 # file using hist(2nd col, width)
 
-plot "tmp/INFILE1" u (hist($2,width)-ofs) smooth freq w boxes lc rgb"red" title "Vulkan", \
-    "tmp/INFILE2" u (hist($2,width)+ofs) smooth freq w boxes lc rgb"blue" title "OpenGL"
+plot "tmp/vk-06-28-16-42-37.tmp" u (hist($2,width)-ofs) smooth freq w boxes lc rgb"red" title "Vulkan", \
+    "tmp/gl-06-28-16-42-37.tmp" u (hist($2,width)+ofs) smooth freq w boxes lc rgb"blue" title "OpenGL"
 
 set terminal pop
 set output

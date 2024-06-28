@@ -12,10 +12,14 @@ BENCH_DATA="$BENCH_BASE_DIR/data"
 BENCH_GRAPHS="$BENCH_BASE_DIR/graphs"
 BENCH_TMP="$BENCH_BASE_DIR/tmp"
 
-TEST_START=500 
+# frames
+TEST_START=500 # should be over 50 to avoid irrelevant stdout
 TEST_DURATION=5000
-UPLOAD_BUDGET=300
-RENDER_BUDGET=300
+# seconds
+SLEEP=20
+UPLOAD_BUDGET=512
+RENDER_BUDGET=256
+RAM_BUDGET=4196
 
 rebuild () {
     cd "$BASE_DIR"
@@ -28,71 +32,66 @@ check-lc() {
     num=0
     # first calculate the total frames needed, then add complation output buffer
     # the +50 is to avoid the initial prints
-    full_dur=$(echo "($TEST_DURATION + $TEST_START) + 50" | bc)
+    full_dur=$(($TEST_DURATION + $TEST_START))
+    num_old=1
     while [ $num -le $full_dur ]
     do
         sleep 2
         num=$(wc -l "$1" | cut -d" " -f1)
         echo "[info][$2]: $num from $full_dur intervals rendered"
+        if [ $num == $num_old ]; then
+            # if the define is not set
+            echo "no more stdout :("
+            exit 1
+        fi
+        num_old=$num
     done
 }
 
 render-vk () {
     cd "$WORKING_DIR"
     logfile="$BENCH_LOGS/vk-$2.log"
-    ./unity_dummy_vk --upload_budget $UPLOAD_BUDGET --render_budget $RENDER_BUDGET ../../$1 >> $logfile & check-lc $logfile vk
-    pkill unity_dummy_vk
+    ./unity_dummy_vk --upload_budget $UPLOAD_BUDGET --render_budget $RENDER_BUDGET --ram_budget $RAM_BUDGET ../../$1 >> $logfile & check-lc $logfile vk
+    if pidof unity_dummy_vk; then
+        pkill unity_dummy_vk
+    else
+        exit 2
+    fi
 }
 
 render-gl () {
     cd "$WORKING_DIR"
     logfile="$BENCH_LOGS/gl-$2.log"
-    ./unity_dummy --upload_budget $UPLOAD_BUDGET --render_budget $RENDER_BUDGET ../../$1 >> $logfile & check-lc $logfile gl
-    pkill unity_dummy
-}
-
-strip-data () {
-
-    vktmp="$BENCH_TMP/vk-$1.tmp"
-    cp "$BENCH_LOGS/vk-$1.log" "$vktmp"
-    sed -i '1,/^VK.*/d' "$vktmp"
-    gltmp="$BENCH_TMP/gl-$1.tmp"
-    cp "$BENCH_LOGS/gl-$1.log" "$gltmp"
-    sed -i '1,/^GL.*/d' "$gltmp"
-    # for extracting ms
-    #it=$TEST_START
-    # it_end=$(echo "$TEST_DURATION + $TEST_START" | bc)
-    # while [ $it -lt $it_end ]
-    # do
-    #     echo -e $(echo "($it - $TEST_START)" | bc -l)\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 2)  >> "$BENCH_DATA/ms-$1"
-    #     # alternative
-    #     # echo -e $(echo "($it - $TEST_START) * 10" | bc -l\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
-    #     ((it++))
-    # done
-    # echo -e "\n\n" >> "$BENCH_DATA/ms-$1"
-    
-    # it=$TEST_START
-    # while [ $it -lt $it_end ]
-    # do
-    #     echo -e $(echo "($it - $TEST_START)" | bc -l)\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 2) >> "$BENCH_DATA/ms-$1"
-    #     # alternative
-    #     # echo -e $(echo "($it - $TEST_START) * 10" | bc -l\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
-    #     ((it++))
-    # done
-    # # optional for fps
-    # # sed -i 's/(//g' "$BENCH_DATA/fps-$1"
-
+    ./unity_dummy --upload_budget $UPLOAD_BUDGET --render_budget $RENDER_BUDGET --ram_budget $RAM_BUDGET ../../$1 >> $logfile & check-lc $logfile gl
+    if pidof unity_dummy; then
+        pkill unity_dummy
+    else
+        exit 2
+    fi
 }
 
 graph-data () {
+
+    # stripping files
+    fin="$((TEST_START + TEST_DURATION))"
+    vktmp="$BENCH_TMP/vk-$1.tmp"    
+    tail -n "+$TEST_START" "$BENCH_LOGS/vk-$1.log" | head -n "$((fin - TEST_START + 1))" >> "$vktmp"
+    gltmp="$BENCH_TMP/gl-$1.tmp"
+    tail -n "+$TEST_START" "$BENCH_LOGS/gl-$1.log" | head -n "$((fin - TEST_START + 1))" >> "$gltmp"
+
     # todo grab data from the info and transfer it here
     graph_file="$BENCH_TMP/graph-$1.dat"
     info_file="$BENCH_LOGS/info-$1.log"
-    cp "$BENCH_GRAPHS/template-hist.dat" "$graph_file"
+    cp "$BENCH_GRAPHS/template-bin-hist.dat" "$graph_file"
     sed -i 's/FILENAME/'$1'/g' "$graph_file"
-    sed -i 's/TITLE/'$(cat $info_file)'/g' "$graph_file"
+    #sed -i 's/TITLE/'$(cat $info_file)'/g' "$graph_file"
+    sed -i 's?INFILE1?vk-'$1'.tmp?g' "$graph_file"
+    sed -i 's!INFILE2!gl-'$1'.tmp!g' "$graph_file"
+    sed -i 's/TOTAL/'$TEST_DURATION'/g' "$graph_file"
+
     cd "$BENCH_BASE_DIR"
-    gnuplot -p "$graph_file"
+    #i'd love to save the stats right then and there as well since they get printed to the console
+    gnuplot -p "$graph_file"  &> "$BENCH_GRAPHS/stats-$1.txt"
 } 
 
 bench-variants () {
@@ -103,14 +102,15 @@ bench-variants () {
     echo "[info] starting vk run"
     render-vk $1 $2
     # ------------------------
-    echo "[info] let GPU cool down"
-    sleep 5
+    echo "[info] let GPU cool down for $SLEEP seconds"
+    sleep $SLEEP
     echo "[info] starting gl run"
     render-gl $1 $2
     # ------------------------
     echo "[info] both runs have finished, processing data"
-    strip-data $log_stamp
     graph-data $log_stamp
+    echo "[info] let GPU cool down for $SLEEP seconds"
+    sleep $SLEEP
 }
 
 
@@ -126,5 +126,7 @@ main () {
     bench-variants $MODEL_4 $log_stamp
 }
 
-rebuild
+if [ $# -gt "0" ]; then
+    rebuild
+fi
 main
