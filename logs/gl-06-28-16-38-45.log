@@ -1,0 +1,25 @@
+Frame: 1: g_rs.camera: 0
+Frame: 2: g_rs.camera: 0
+[33munity_dummy.cpp[0m[31m (line 81): [0mBefore initialising plamure
+[33munity_dummy.cpp[0m[31m (line 84): [0mTrying to register model: ../../assets/Modell_Ruine.bvh
+[33mmodel_database.cpp[0m[31m (line 169): [0m0
+[33mplamure.cpp[0m[31m (line 1368): [0mBefore initialising plamure
+Trying to register new model with id: 0  --: /home/jre/git/plamure/framework/plamure.cpp : 1370 : register_model
+[33munity_dummy.cpp[0m[31m (line 87): [0mregistered model with id: 0
+Could not retrieve uniform location for uniform: view_projection
+[33munity_dummy.cpp[0m[31m (line 97): [0mAfter Init
+[33munity_dummy.cpp[0m[31m (line 108): [0mAfter Register Uniform
+Creating gpu_context
+lamure: context 0 render budget (MB): 300(9488 nodes)
+node size:  33152
+lamure: context 0 upload budget (MB): 300
+Render buf size is 299 MB 
+Render buf size is 299 MB 
+Render buf size is 299 MB 
+Frame: 3: g_rs.camera: 0x5bd19500af40
+Frame: 4: g_rs.camera: 0x5bd19500af40
+Frame: 5: g_rs.camera: 0x5bd19500af40
+Frame: 6: g_rs.camera: 0x5bd19500af40
+Frame: 7: g_rs.camera: 0x5bd19500af40
+Frame: 8: g_rs.camera: 0x5bd19500af40
+Frame: 9: g_rs.camera: 0x5bd19500af40

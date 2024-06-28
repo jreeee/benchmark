@@ -60,27 +60,27 @@ strip-data () {
     cp "$BENCH_LOGS/gl-$1.log" "$gltmp"
     sed -i '1,/^GL.*/d' "$gltmp"
     # for extracting ms
-    it=$TEST_START
-    it_end=$(echo "$TEST_DURATION + $TEST_START" | bc)
-    while [ $it -lt $it_end ]
-    do
-        echo -e $(echo "($it - $TEST_START)" | bc -l)\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 2)  >> "$BENCH_DATA/ms-$1"
-        # alternative
-        # echo -e $(echo "($it - $TEST_START) * 10" | bc -l\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
-        ((it++))
-    done
-    echo -e "\n\n" >> "$BENCH_DATA/ms-$1"
+    #it=$TEST_START
+    # it_end=$(echo "$TEST_DURATION + $TEST_START" | bc)
+    # while [ $it -lt $it_end ]
+    # do
+    #     echo -e $(echo "($it - $TEST_START)" | bc -l)\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 2)  >> "$BENCH_DATA/ms-$1"
+    #     # alternative
+    #     # echo -e $(echo "($it - $TEST_START) * 10" | bc -l\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
+    #     ((it++))
+    # done
+    # echo -e "\n\n" >> "$BENCH_DATA/ms-$1"
     
-    it=$TEST_START
-    while [ $it -lt $it_end ]
-    do
-        echo -e $(echo "($it - $TEST_START)" | bc -l)\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 2) >> "$BENCH_DATA/ms-$1"
-        # alternative
-        # echo -e $(echo "($it - $TEST_START) * 10" | bc -l\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
-        ((it++))
-    done
-    # optional for fps
-    # sed -i 's/(//g' "$BENCH_DATA/fps-$1"
+    # it=$TEST_START
+    # while [ $it -lt $it_end ]
+    # do
+    #     echo -e $(echo "($it - $TEST_START)" | bc -l)\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 2) >> "$BENCH_DATA/ms-$1"
+    #     # alternative
+    #     # echo -e $(echo "($it - $TEST_START) * 10" | bc -l\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
+    #     ((it++))
+    # done
+    # # optional for fps
+    # # sed -i 's/(//g' "$BENCH_DATA/fps-$1"
 
 }
 
@@ -90,7 +90,7 @@ graph-data () {
     info_file="$BENCH_LOGS/info-$1.log"
     cp "$BENCH_GRAPHS/template-hist.dat" "$graph_file"
     sed -i 's/FILENAME/'$1'/g' "$graph_file"
-    sed -i 's/TITLE/'$(cat $info_file)'/g" "$graph_file"
+    sed -i 's/TITLE/'$(cat $info_file)'/g' "$graph_file"
     cd "$BENCH_BASE_DIR"
     gnuplot -p "$graph_file"
 } 
@@ -126,5 +126,5 @@ main () {
     bench-variants $MODEL_4 $log_stamp
 }
 
-#rebuild
+rebuild
 main

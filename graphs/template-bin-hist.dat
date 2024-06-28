@@ -1,8 +1,9 @@
 reset
 n=200 #number of intervals
-min=0.0 #min value
-max=0.6 #max value
+min=2.3 #min value
+max=2.8 #max value
 width=(max-min)/n #interval width
+ofs=width/4
 #function used to map a value to the intervals
 hist(x,width)=width*floor(x/width)+width/2.0
 set term png #output terminal and file
@@ -13,13 +14,16 @@ set yrange [0:]
 #data inside an autoscaled graph.
 set offset graph 0.05,0.05,0.05,0.0
 set xtics min,(max-min)/5,max
-set boxwidth width*0.9
-set style fill solid 0.5 #fillstyle
+set boxwidth width*0.2 #relative
+set style fill solid 0.7 #fillstyle
 set tics out nomirror
-set xlabel "x"
-set ylabel "Frequency"
+set xlabel "frametime in ms"
+set ylabel "Occurrences sampled over 5000 frames"
 #count and plot
-plot "data/ms-06-28-13-44-48" u 2:(hist($2,width)):(1.0) smooth freq w boxes lc rgb"green"
+# file using hist(2nd col, width)
+
+plot "tmp/vk-06-28-16-42-37.tmp" u (hist($2,width)-ofs) smooth freq w boxes lc rgb"red" title "Vulkan", \
+    "tmp/gl-06-28-16-42-37.tmp" u (hist($2,width)+ofs) smooth freq w boxes lc rgb"blue" title "OpenGL"
 
 set terminal pop
 set output
