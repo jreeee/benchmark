@@ -12,8 +12,8 @@ BENCH_DATA="$BENCH_BASE_DIR/data"
 BENCH_GRAPHS="$BENCH_BASE_DIR/graphs"
 BENCH_TMP="$BENCH_BASE_DIR/tmp"
 
-TEST_START=50 # in 10 frame intervals
-TEST_DURATION=500 # in 10 frame intervals
+TEST_START=500 
+TEST_DURATION=5000
 UPLOAD_BUDGET=300
 RENDER_BUDGET=300
 
@@ -27,10 +27,11 @@ rebuild () {
 check-lc() {
     num=0
     # first calculate the total frames needed, then add complation output buffer
+    # the +50 is to avoid the initial prints
     full_dur=$(echo "($TEST_DURATION + $TEST_START) + 50" | bc)
     while [ $num -le $full_dur ]
     do
-        sleep 5
+        sleep 2
         num=$(wc -l "$1" | cut -d" " -f1)
         echo "[info][$2]: $num from $full_dur intervals rendered"
     done
@@ -54,16 +55,16 @@ strip-data () {
 
     vktmp="$BENCH_TMP/vk-$1.tmp"
     cp "$BENCH_LOGS/vk-$1.log" "$vktmp"
-    sed -i '1,/^Average.*/d' "$vktmp"
+    sed -i '1,/^VK.*/d' "$vktmp"
     gltmp="$BENCH_TMP/gl-$1.tmp"
     cp "$BENCH_LOGS/gl-$1.log" "$gltmp"
-    sed -i '1,/^Average.*/d' "$gltmp"
+    sed -i '1,/^GL.*/d' "$gltmp"
     # for extracting ms
     it=$TEST_START
     it_end=$(echo "$TEST_DURATION + $TEST_START" | bc)
     while [ $it -lt $it_end ]
     do
-        echo -e $(echo "($it - $TEST_START) * 10" | bc -l)\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 9)  >> "$BENCH_DATA/ms-$1"
+        echo -e $(echo "($it - $TEST_START)" | bc -l)\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 2)  >> "$BENCH_DATA/ms-$1"
         # alternative
         # echo -e $(echo "($it - $TEST_START) * 10" | bc -l\\t$(cut -d$'\n' $vktmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
         ((it++))
@@ -73,7 +74,7 @@ strip-data () {
     it=$TEST_START
     while [ $it -lt $it_end ]
     do
-        echo -e $(echo "($it - $TEST_START) * 10" | bc -l)\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 9) >> "$BENCH_DATA/ms-$1"
+        echo -e $(echo "($it - $TEST_START)" | bc -l)\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 2) >> "$BENCH_DATA/ms-$1"
         # alternative
         # echo -e $(echo "($it - $TEST_START) * 10" | bc -l\\t$(cut -d$'\n' $gltmp -f $it | cut -d " " -f 11) >> "$BENCH_DATA/fps-$1"
         ((it++))
@@ -86,8 +87,10 @@ strip-data () {
 graph-data () {
     # todo grab data from the info and transfer it here
     graph_file="$BENCH_TMP/graph-$1.dat"
-    cp "$BENCH_GRAPHS/base.dat" "$graph_file"
+    info_file="$BENCH_LOGS/info-$1.log"
+    cp "$BENCH_GRAPHS/template-hist.dat" "$graph_file"
     sed -i 's/FILENAME/'$1'/g' "$graph_file"
+    sed -i 's/TITLE/'$(cat $info_file)'/g" "$graph_file"
     cd "$BENCH_BASE_DIR"
     gnuplot -p "$graph_file"
 } 
@@ -123,4 +126,5 @@ main () {
     bench-variants $MODEL_4 $log_stamp
 }
 
+#rebuild
 main
