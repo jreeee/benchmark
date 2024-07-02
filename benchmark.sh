@@ -14,11 +14,13 @@ BENCH_TMP="$BENCH_BASE_DIR/tmp"
 
 # frames
 TEST_START=500 # should be over 50 to avoid irrelevant stdout
+# frames
+TEST_START=500 # should be over 50 to avoid irrelevant stdout
 TEST_DURATION=5000
 # seconds
-SLEEP=20
+SLEEP=10
 UPLOAD_BUDGET=512
-RENDER_BUDGET=256
+RENDER_BUDGET=16
 RAM_BUDGET=4196
 
 rebuild () {
@@ -90,8 +92,7 @@ graph-data () {
     sed -i 's/TOTAL/'$TEST_DURATION'/g' "$graph_file"
 
     cd "$BENCH_BASE_DIR"
-    #i'd love to save the stats right then and there as well since they get printed to the console
-    gnuplot -p "$graph_file"  &> "$BENCH_GRAPHS/stats-$1.txt"
+    gnuplot "$graph_file"  &> "$BENCH_GRAPHS/stats-$1.txt"
 } 
 
 bench-variants () {
@@ -104,6 +105,8 @@ bench-variants () {
     # ------------------------
     echo "[info] let GPU cool down for $SLEEP seconds"
     sleep $SLEEP
+    echo "[info] let GPU cool down for $SLEEP seconds"
+    sleep $SLEEP
     echo "[info] starting gl run"
     render-gl $1 $2
     # ------------------------
@@ -111,22 +114,31 @@ bench-variants () {
     graph-data $log_stamp
     echo "[info] let GPU cool down for $SLEEP seconds"
     sleep $SLEEP
+    echo "[info] let GPU cool down for $SLEEP seconds"
+    sleep $SLEEP
 }
 
 
-# rebuild
 main () {
-    log_stamp=$(date +%m-%d-%H-%M-%S)
-    bench-variants $MODEL_1 $log_stamp
-    log_stamp=$(date +%m-%d-%H-%M-%S)
-    bench-variants $MODEL_2 $log_stamp
-    log_stamp=$(date +%m-%d-%H-%M-%S)
-    bench-variants $MODEL_3 $log_stamp
-    log_stamp=$(date +%m-%d-%H-%M-%S)
-    bench-variants $MODEL_4 $log_stamp
+    RUNS=50
+    for i in $(seq 1 $RUNS);
+    do
+	[ $((i%10)) == 0 ]; RENDER_BUDGET=$((RENDER_BUDGET+RENDER_BUDGET)) 
+        echo "[info] starting run $i from $RUNS with $RENDER_BUDGET"
+        log_stamp=run-$i-1_$(date +%m-%d-%H-%M-%S)
+        bench-variants $MODEL_1 $log_stamp
+        log_stamp=run-$i-2_$(date +%m-%d-%H-%M-%S)
+        bench-variants $MODEL_2 $log_stamp
+        log_stamp=run-$i-3_$(date +%m-%d-%H-%M-%S)
+        bench-variants $MODEL_3 $log_stamp
+        log_stamp=run-$i-4_$(date +%m-%d-%H-%M-%S)
+        bench-variants $MODEL_4 $log_stamp
+	# pkill gnuplot_qt
+    done
 }
 
 if [ $# -gt "0" ]; then
     rebuild
 fi
+
 main
