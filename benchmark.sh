@@ -26,7 +26,7 @@ TEST_DURATION=5000
 # seconds
 SLEEP=10
 UPLOAD_BUDGET=1024
-RENDER_BUDGET=2048
+RENDER_BUDGET=256 # cant be greater than this atm bc gl refining not using all that is available
 RAM_BUDGET=16384
 
 rebuild () {
@@ -45,15 +45,13 @@ check-lc() {
     while [ $num -le $full_dur ]
     do
         sleep 4
-        echo "$1"
         num=$(wc -l "$1" | cut -d" " -f1)
-        echo $(wc -l "$1" | cut -d" " -f1)
-        echo "[info][$2]: $num from $full_dur intervals rendered"
+        echo "[info][$2]: $num from $full_dur frames rendered"
         if [ $num == $num_old ]; then
             # if the define is not set
-            echo "no more stdout :("
-            pkill unity_dummy_vk
-            exit 1
+            echo "no more stdout ?"
+            # pkill unity_dummy_vk
+            # exit 1
         fi
         num_old=$num
     done
@@ -124,7 +122,7 @@ graph-data () {
 
 bench-variants () {
     loginfo="$BENCH_LOGS/info-$2.log"
-    echo "run: $2 model: $1 | resolution: $3 rendering: $4 | UB: $UPLOAD_BUDGET RB: $RENDER_BUDGET TS: $TEST_START TD: $TEST_DURATION" >> $loginfo
+    echo "run: $2 model: $1 | resolution: $3 render mode: $4 | UB: $UPLOAD_BUDGET RB: $RENDER_BUDGET TS: $TEST_START TD: $TEST_DURATION" >> $loginfo
     cat $loginfo
     # ------------------------
     echo "[info] starting vk run"
@@ -144,22 +142,28 @@ bench-variants () {
 
 main () {
     # MAX=2048
-    # RUNS=10
-    #     for i in $(seq 1 $RUNS);
-    #     do
-    #echo "[info] starting run $i from $RUNS with $RENDER_BUDGET"
-    log_stamp=1-run-$i_$(date +%m-%d-%H-%M-%S)
-    bench-variants $MODEL_1 $log_stamp 1 3
-    #     done
-    #     # log_stamp=run-$i-2_$(date +%m-%d-%H-%M-%S)
-    #     # bench-variants $MODEL_2 $log_stamp
-    #     # log_stamp=run-$i-3_$(date +%m-%d-%H-%M-%S)
-    #     # bench-variants $MODEL_3 $log_stamp
-    #     # log_stamp=run-$i-4_$(date +%m-%d-%H-%M-%S)
-    #     # bench-variants $MODEL_4 $log_stamp
+    RUN=1
+
+    for i in $(seq 1 5);
+        do
+
+        for j in $(seq 1 3);
+        do
+            echo "[info] starting run $RUN from $RUNS with $RENDER_BUDGET"
+            log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-1
+            bench-variants $MODEL_1 $log_stamp $i $j
+            # log_stamp=run$RUN-$i-$j_$(date +%m-%d-%H-%M-%S)_model-2
+            # bench-variants $MODEL_2 $log_stamp $i $j
+            # log_stamp=run$RUN-$i-$j_$(date +%m-%d-%H-%M-%S)_model-3
+            # bench-variants $MODEL_3 $log_stamp $i $j
+            # log_stamp=run$RUN-$i-$j_$(date +%m-%d-%H-%M-%S)_model-4
+            # bench-variants $MODEL_4 $log_stamp $i $j
+            RUN=$((RUN + 1))
+        done
+    #     
 	# # pkill gnuplot_qt
     #     RENDER_BUDGET=$((RENDER_BUDGET * 2))
-    # done
+    done
 }
 
 if [ $# -gt "0" ]; then

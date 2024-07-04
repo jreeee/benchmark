@@ -1,0 +1,60 @@
+
+* FILE: 
+  Records:           5001
+  Out of range:         0
+  Invalid:              0
+  Header records:       0
+  Blank:                0
+  Data Blocks:          1
+
+* COLUMN: 
+  Mean:               2.2381
+  Std Dev:            0.0156
+  Sample StdDev:      0.0156
+  Skewness:          -0.1402
+  Kurtosis:           2.0394
+  Avg Dev:            0.0128
+  Sum:            11192.9293
+  Sum Sq.:        25052.5383
+
+  Mean Err.:          0.0002
+  Std Dev Err.:       0.0002
+  Skewness Err.:      0.0346
+  Kurtosis Err.:      0.0693
+
+  Minimum:            2.2006 [1499]
+  Maximum:            2.2651 [4150]
+  Quartile:           2.2252 
+  Median:             2.2415 
+  Quartile:           2.2446 
+
+
+* FILE: 
+  Records:           5001
+  Out of range:         0
+  Invalid:              0
+  Header records:       0
+  Blank:                0
+  Data Blocks:          1
+
+* COLUMN: 
+  Mean:               0.6330
+  Std Dev:            0.0008
+  Sample StdDev:      0.0008
+  Skewness:           0.1328
+  Kurtosis:           2.9727
+  Avg Dev:            0.0006
+  Sum:             3165.3868
+  Sum Sq.:         2003.5372
+
+  Mean Err.:          0.0000
+  Std Dev Err.:       0.0000
+  Skewness Err.:      0.0346
+  Kurtosis Err.:      0.0693
+
+  Minimum:            0.6308 [ 114]
+  Maximum:            0.6359 [4952]
+  Quartile:           0.6328 
+  Median:             0.6328 
+  Quartile:           0.6339 
+
