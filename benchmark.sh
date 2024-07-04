@@ -12,16 +12,22 @@ BENCH_DATA="$BENCH_BASE_DIR/data"
 BENCH_GRAPHS="$BENCH_BASE_DIR/graphs"
 BENCH_TMP="$BENCH_BASE_DIR/tmp"
 
-# frames
-TEST_START=500 # should be over 50 to avoid irrelevant stdout
+RESOLUTION_1="--sc_x=1280 --sc_y=720"
+RESOLUTION_2="--sc_x=1920 --sc_y=1080"
+RESOLUTION_3="--sc_x=2560 --sc_y=1440"
+RESOLUTION_4="--sc_x=3840 --sc_y=2160"
+RESOLUTION_5="--sc_x=5120 --sc_y=3200"
+
+REN_MODE=1
+
 # frames
 TEST_START=500 # should be over 50 to avoid irrelevant stdout
 TEST_DURATION=5000
 # seconds
 SLEEP=10
-UPLOAD_BUDGET=512
-RENDER_BUDGET=16
-RAM_BUDGET=4196
+UPLOAD_BUDGET=1024
+RENDER_BUDGET=2048
+RAM_BUDGET=16384
 
 rebuild () {
     cd "$BASE_DIR"
@@ -38,12 +44,15 @@ check-lc() {
     num_old=1
     while [ $num -le $full_dur ]
     do
-        sleep 2
+        sleep 4
+        echo "$1"
         num=$(wc -l "$1" | cut -d" " -f1)
+        echo $(wc -l "$1" | cut -d" " -f1)
         echo "[info][$2]: $num from $full_dur intervals rendered"
         if [ $num == $num_old ]; then
             # if the define is not set
             echo "no more stdout :("
+            pkill unity_dummy_vk
             exit 1
         fi
         num_old=$num
@@ -53,18 +62,36 @@ check-lc() {
 render-vk () {
     cd "$WORKING_DIR"
     logfile="$BENCH_LOGS/vk-$2.log"
-    ./unity_dummy_vk --upload_budget $UPLOAD_BUDGET --render_budget $RENDER_BUDGET --ram_budget $RAM_BUDGET ../../$1 >> $logfile & check-lc $logfile vk
+    case $3 in
+        1) resolution="$RESOLUTION_1";;
+        2) resolution="$RESOLUTION_2";;
+        3) resolution="$RESOLUTION_3";;
+        4) resolution="$RESOLUTION_4";;
+        5) resolution="$RESOLUTION_5";;
+        *) resolution="$RESOLUTION_2";;
+    esac
+    ./unity_dummy_vk ../../$1 --upload_budget $UPLOAD_BUDGET --render_budget $RENDER_BUDGET --ram_budget $RAM_BUDGET $resolution --render_type=$4 >> $logfile & check-lc $logfile vk
     if pidof unity_dummy_vk; then
         pkill unity_dummy_vk
     else
         exit 2
     fi
+    echo "[info][vk] removing impossible frametimes"
+    sed -i 's/VK 167271//g' "$logfile"
 }
 
 render-gl () {
     cd "$WORKING_DIR"
     logfile="$BENCH_LOGS/gl-$2.log"
-    ./unity_dummy --upload_budget $UPLOAD_BUDGET --render_budget $RENDER_BUDGET --ram_budget $RAM_BUDGET ../../$1 >> $logfile & check-lc $logfile gl
+    case $3 in
+        1) resolution="$RESOLUTION_1";;
+        2) resolution="$RESOLUTION_2";;
+        3) resolution="$RESOLUTION_3";;
+        4) resolution="$RESOLUTION_4";;
+        5) resolution="$RESOLUTION_5";;
+        *) resolution="$RESOLUTION_2";;
+    esac
+    ./unity_dummy ../../$1 --upload_budget $UPLOAD_BUDGET --render_budget $RENDER_BUDGET --ram_budget $RAM_BUDGET $resolution --render_type=$4 >> $logfile & check-lc $logfile gl
     if pidof unity_dummy; then
         pkill unity_dummy
     else
@@ -97,44 +124,42 @@ graph-data () {
 
 bench-variants () {
     loginfo="$BENCH_LOGS/info-$2.log"
-    echo "run: $2 model: $1 | UB: $UPLOAD_BUDGET RB: $RENDER_BUDGET TS: $TEST_START TD: $TEST_DURATION" >> $loginfo
+    echo "run: $2 model: $1 | resolution: $3 rendering: $4 | UB: $UPLOAD_BUDGET RB: $RENDER_BUDGET TS: $TEST_START TD: $TEST_DURATION" >> $loginfo
     cat $loginfo
     # ------------------------
     echo "[info] starting vk run"
-    render-vk $1 $2
+    render-vk $1 $2 $3 $4
     # ------------------------
-    echo "[info] let GPU cool down for $SLEEP seconds"
-    sleep $SLEEP
     echo "[info] let GPU cool down for $SLEEP seconds"
     sleep $SLEEP
     echo "[info] starting gl run"
-    render-gl $1 $2
+    render-gl $1 $2 $3 $4
     # ------------------------
     echo "[info] both runs have finished, processing data"
     graph-data $log_stamp
-    echo "[info] let GPU cool down for $SLEEP seconds"
-    sleep $SLEEP
     echo "[info] let GPU cool down for $SLEEP seconds"
     sleep $SLEEP
 }
 
 
 main () {
-    RUNS=50
-    for i in $(seq 1 $RUNS);
-    do
-	[ $((i%10)) == 0 ]; RENDER_BUDGET=$((RENDER_BUDGET+RENDER_BUDGET)) 
-        echo "[info] starting run $i from $RUNS with $RENDER_BUDGET"
-        log_stamp=run-$i-1_$(date +%m-%d-%H-%M-%S)
-        bench-variants $MODEL_1 $log_stamp
-        log_stamp=run-$i-2_$(date +%m-%d-%H-%M-%S)
-        bench-variants $MODEL_2 $log_stamp
-        log_stamp=run-$i-3_$(date +%m-%d-%H-%M-%S)
-        bench-variants $MODEL_3 $log_stamp
-        log_stamp=run-$i-4_$(date +%m-%d-%H-%M-%S)
-        bench-variants $MODEL_4 $log_stamp
-	# pkill gnuplot_qt
-    done
+    # MAX=2048
+    # RUNS=10
+    #     for i in $(seq 1 $RUNS);
+    #     do
+    #echo "[info] starting run $i from $RUNS with $RENDER_BUDGET"
+    log_stamp=1-run-$i_$(date +%m-%d-%H-%M-%S)
+    bench-variants $MODEL_1 $log_stamp 1 3
+    #     done
+    #     # log_stamp=run-$i-2_$(date +%m-%d-%H-%M-%S)
+    #     # bench-variants $MODEL_2 $log_stamp
+    #     # log_stamp=run-$i-3_$(date +%m-%d-%H-%M-%S)
+    #     # bench-variants $MODEL_3 $log_stamp
+    #     # log_stamp=run-$i-4_$(date +%m-%d-%H-%M-%S)
+    #     # bench-variants $MODEL_4 $log_stamp
+	# # pkill gnuplot_qt
+    #     RENDER_BUDGET=$((RENDER_BUDGET * 2))
+    # done
 }
 
 if [ $# -gt "0" ]; then
