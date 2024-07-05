@@ -75,7 +75,8 @@ render-vk () {
         exit 2
     fi
     echo "[info][vk] removing impossible frametimes"
-    sed -i 's/VK 167271//g' "$logfile"
+    grep "+13" "$logfile"
+    sed -i '/e+13/d' "$logfile"
 }
 
 render-gl () {
@@ -152,9 +153,9 @@ main () {
             echo "[info] starting run $RUN from $RUNS with $RENDER_BUDGET"
             # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-1
             # bench-variants $MODEL_1 $log_stamp $i $j
-            # log_stamp=run$RUN-$i-$j_$(date +%m-%d-%H-%M-%S)_model-2
+            # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-2
             # bench-variants $MODEL_2 $log_stamp $i $j
-            # log_stamp=run$RUN-$i-$j_$(date +%m-%d-%H-%M-%S)_model-3
+            # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-3
             # bench-variants $MODEL_3 $log_stamp $i $j
             log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-4
             bench-variants $MODEL_4 $log_stamp $i $j
