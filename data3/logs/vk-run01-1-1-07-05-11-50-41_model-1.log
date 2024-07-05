@@ -1,0 +1,835 @@
+Initializing GLFW...
+Initializing Vulkan...
+[WARNING: General]
+loader_add_layer_properties: 'layers' tag not supported until file version 1.0.1, but /usr/share/vulkan/implicit_layer.d/nvidia_layers.json is reporting version 1
+1 for timestamps
+Initializing plamure...
+Creating plamure_vk instance
+[33mmodel_database.cpp[0m[31m (line 169): [0m0
+[33mplamure.cpp[0m[31m (line 1396): [0mBefore initialising plamure
+Trying to register new model with id: 0  --: /home/jre/git/plamure/framework/plamure.cpp : 1398 : register_model
+Registered ../../assets/Modell_Ruine.bvh at 0
+Loading vk shaders...
+Initializing Swapchain...
+3 swapchain size
+create image and imageview
+create image and imageview
+create image and imageview
+Initializing Commands...
+Initializing Renderpasses...
+creating multi-render pass
+done creating multi-render pass
+Initializing Framebuffers...
+Initializing Sync Structures...
+Initializing Descriptors...
+frame
+updated descriptor sets mode -1,0
+updated descriptor sets mode 0,0
+updated descriptor sets mode 1,0
+updated descriptor sets mode 2,0
+updated descriptor sets mode 3,0
+updated descriptor sets mode 4,0
+Initializing Pipelines...
+updating framebuffer
+Creating gpu_context
+gpu_context_vk::create()
+lamure: context 0 render budget (MB): 256(8097 nodes)
+node size:  33152
+lamure: context 0 upload budget (MB): 1024
+temp_buffer_a_: Created GPU access object with 32388 slots (1023MB) @0x5bd676ba35a0
+temp_buffer_b_: Created GPU access object with 32388 slots (1023MB) @0x5bd676be9560
+primary_buffer_: Created GPU access object with 8097 slots (255MB) @0x5bd676c263b0
+0
+VK 0.001024 ms
+0
+VK 0.001024 ms
+0
+0
+VK 0 ms
+0
+VK 0 ms
+1
+VK 0.001024 ms
+1
+VK 0.00512 ms
+1
+VK 0.002048 ms
+1
+VK 0.002048 ms
+2
+VK 0.003072 ms
+2
+VK 0.003072 ms
+4
+VK 0.00512 ms
+4
+VK 0.00512 ms
+8
+VK 0.00512 ms
+8
+VK 0.006144 ms
+8
+VK 0.00512 ms
+8
+VK 0.006144 ms
+8
+VK 0.006144 ms
+16
+VK 0.006144 ms
+16
+VK 0.00512 ms
+16
+VK 0.00512 ms
+16
+VK 0.007168 ms
+16
+VK 0.008192 ms
+16
+16
+VK 0.007168 ms
+16
+VK 0.007168 ms
+16
+VK 0.007168 ms
+32
+VK 0.008192 ms
+32
+VK 0.008192 ms
+32
+VK 0.008192 ms
+32
+VK 0.01024 ms
+32
+VK 0.01024 ms
+32
+32
+VK 0.01024 ms
+32
+VK 0.011264 ms
+32
+VK 0.01024 ms
+32
+VK 0.01024 ms
+32
+VK 0.011264 ms
+64
+VK 0.01024 ms
+64
+VK 0.014336 ms
+64
+64
+VK 0.014336 ms
+128
+VK 0.0256 ms
+128
+VK 0.0256 ms
+128
+VK 0.0256 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.027648 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+128
+VK 0.026624 ms
+248
+VK 0.026624 ms
+248
+248
+VK 0.04608 ms
+248
+VK 0.04608 ms
+248
+VK 0.047104 ms
+248
+VK 0.047104 ms
+248
+VK 0.04608 ms
+248
+VK 0.047104 ms
+248
+VK 0.04608 ms
+248
+VK 0.047104 ms
+248
+VK 0.047104 ms
+248
+VK 0.04608 ms
+248
+VK 0.04608 ms
+248
+VK 0.04608 ms
+248
+VK 0.04608 ms
+248
+VK 0.04608 ms
+248
+VK 0.047104 ms
+248
+VK 0.047104 ms
+248
+VK 0.047104 ms
+248
+VK 0.047104 ms
+248
+VK 0.04608 ms
+248
+VK 0.04608 ms
+248
+VK 0.04608 ms
+248
+VK 0.047104 ms
+248
+VK 0.047104 ms
+248
+VK 0.047104 ms
+248
+VK 0.047104 ms
+248
+VK 0.047104 ms
+248
+VK 0.047104 ms
+248
+VK 0.04608 ms
+248
+VK 0.04608 ms
+248
+VK 0.047104 ms
+248
+VK 0.04608 ms
+406
+VK 0.04608 ms
+406
+406
+VK 0.077824 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.079872 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.077824 ms
+406
+VK 0.079872 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.079872 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+406
+VK 0.0768 ms
+406
+406
+406
+VK 0.077824 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.077824 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.079872 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.077824 ms
+406
+406
+VK 0.077824 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.077824 ms
+406
+VK 0.078848 ms
+406
+VK 0.078848 ms
+406
+VK 0.077824 ms
+406
+VK 0.078848 ms
+812
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.16896 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.16896 ms
+812
+VK 0.16896 ms
+812
+VK 0.16896 ms
+812
+VK 0.16896 ms
+812
+VK 0.16896 ms
+812
+VK 0.16896 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.16896 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.16896 ms
+812
+VK 0.166912 ms
+812
+VK 0.16896 ms
+812
+VK 0.167936 ms
+812
+VK 0.16896 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.167936 ms
+812
+VK 0.16896 ms
+812
+VK 0.167936 ms
+812
+VK 0.185344 ms
+1303
+1303
+VK 0.285696 ms
+1303
+VK 0.287744 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.287744 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.287744 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.285696 ms
+1303
+VK 0.28672 ms
+1303
+VK 0.284672 ms
+1303
+1303
+VK 0.285696 ms
+1999
+1999
+1999
+VK 0.458752 ms
+1999
+VK 0.459776 ms
+1999
+VK 0.458752 ms
+1999
+VK 0.459776 ms
+1999
+1999
+VK 0.457728 ms
+1999
+VK 0.4608 ms
+1999
+VK 0.459776 ms
+1999
+1999
+1999
+1999
+1999
+1999
+1999
+VK 0.459776 ms
+1999
+VK 0.458752 ms
+1999
+VK 0.459776 ms
+1999
+VK 0.47104 ms
+1999
+VK 0.457728 ms
+1999
+VK 0.457728 ms
+1999
+VK 0.459776 ms
+1999
+VK 0.458752 ms
+1999
+VK 0.459776 ms
+1999
+VK 0.459776 ms
+1999
+VK 0.461824 ms
+2830
+VK 0.4608 ms
+2830
+VK 0.704512 ms
+2830
+VK 0.704512 ms
+2830
+VK 0.705536 ms
+2830
+2830
+2830
+VK 0.703488 ms
+2830
+2830
+2830
+2830
+VK 0.703488 ms
+2830
+VK 0.715776 ms
+2830
+VK 0.705536 ms
+2830
+VK 0.704512 ms
+2830
+VK 0.704512 ms
+2830
+VK 0.704512 ms
+2830
+VK 0.703488 ms
+2830
+VK 0.704512 ms
+2830
+VK 0.705536 ms
+2830
+VK 0.705536 ms
+2830
+VK 0.703488 ms
+2830
+VK 0.705536 ms
+2830
+VK 0.703488 ms
+2830
+VK 0.704512 ms
+4049
+4049
+VK 1.08749 ms
+4049
+VK 1.11002 ms
+4049
+VK 1.08954 ms
+4049
+VK 1.08954 ms
+4049
+VK 1.08544 ms
+4049
+VK 1.08851 ms
+4049
+VK 1.08749 ms
+4049
+VK 1.08851 ms
+4049
+VK 1.08646 ms
+4049
+VK 1.10387 ms
+4049
+VK 1.08954 ms
+4049
+VK 1.09056 ms
+4049
+VK 1.08851 ms
+4049
+VK 1.08954 ms
+4049
+VK 1.08954 ms
+4049
+VK 1.08749 ms
+4049
+VK 1.08851 ms
+4049
+VK 1.09773 ms
+4049
+VK 1.08646 ms
+4049
+VK 1.09056 ms
+4049
+VK 1.09261 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.999424 ms
+4049
+VK 0.995328 ms
+4049
+VK 1.02093 ms
+4049
+VK 0.999424 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.995328 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.994304 ms
+4049
+VK 0.994304 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.999424 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.999424 ms
+4049
+VK 1.00352 ms
+4049
+VK 0.995328 ms
+4049
+VK 0.997376 ms
+4049
+4049
+VK 0.997376 ms
+4049
+VK 0.995328 ms
+4049
+VK 0.995328 ms
+4049
+VK 0.995328 ms
+4049
+VK 0.996352 ms
+4049
+VK 0.995328 ms
+4049
+VK 0.999424 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.996352 ms
+4049
+VK 0.997376 ms
+4049
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.996352 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.996352 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.9984 ms
+4049
+4049
+VK 0.995328 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.996352 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.999424 ms
+4049
+VK 1.00045 ms
+4049
+VK 1.01376 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.999424 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.996352 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.996352 ms
+4049
+4049
+VK 0.999424 ms
+4049
+VK 0.995328 ms
+4049
+VK 0.999424 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.996352 ms
+4049
+VK 0.996352 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.996352 ms
+4049
+VK 0.996352 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.9984 ms
+4049
+VK 1.0199 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 1.00147 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.9984 ms
+4049
+VK 0.997376 ms
+4049
+VK 0.996352 ms
+Plamure deletion queue has 11 elements.
+Dummy queue has 30 elements.
+Deleting 11 things...
+Deleting 30 things...
+Drew 378 frames.

@@ -1,0 +1,1 @@
+run: run04-2-1-07-04-17-52-16_model-1 model: assets/Modell_Ruine.bvh | resolution: 2 render mode: 1 | UB: 1024 RB: 256 TS: 500 TD: 5000

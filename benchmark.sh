@@ -21,12 +21,12 @@ RESOLUTION_5="--sc_x=5120 --sc_y=3200"
 REN_MODE=1
 
 # frames
-TEST_START=500 # should be over 50 to avoid irrelevant stdout
+TEST_START=1000 # should be over 50 to avoid irrelevant stdout
 TEST_DURATION=5000
 # seconds
 SLEEP=10
 UPLOAD_BUDGET=1024
-RENDER_BUDGET=256 # cant be greater than this atm bc gl refining not using all that is available
+RENDER_BUDGET=1024 # cant be greater than this atm bc gl refining not using all that is available
 RAM_BUDGET=16384
 
 rebuild () {
@@ -150,14 +150,14 @@ main () {
         for j in $(seq 1 3);
         do
             echo "[info] starting run $RUN from $RUNS with $RENDER_BUDGET"
-            log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-1
-            bench-variants $MODEL_1 $log_stamp $i $j
+            # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-1
+            # bench-variants $MODEL_1 $log_stamp $i $j
             # log_stamp=run$RUN-$i-$j_$(date +%m-%d-%H-%M-%S)_model-2
             # bench-variants $MODEL_2 $log_stamp $i $j
             # log_stamp=run$RUN-$i-$j_$(date +%m-%d-%H-%M-%S)_model-3
             # bench-variants $MODEL_3 $log_stamp $i $j
-            # log_stamp=run$RUN-$i-$j_$(date +%m-%d-%H-%M-%S)_model-4
-            # bench-variants $MODEL_4 $log_stamp $i $j
+            log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-4
+            bench-variants $MODEL_4 $log_stamp $i $j
             RUN=$((RUN + 1))
         done
     #     
