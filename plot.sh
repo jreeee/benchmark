@@ -12,7 +12,12 @@ RESOLUTION=("720" "1080" "1440" "2160" "2880")
 
 cd "$WORKING_DIR"
 
-mkdir "$RES_DIR"
+if [ ! -d "$RES_DIR" ]; then
+    mkdir "$RES_DIR"
+else 
+    rm -rm "$RES_DIR/*"
+fi
+
 cd graphs
 
 for i in $(seq 1 3);

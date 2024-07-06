@@ -1,0 +1,1 @@
+run: run8-3-2-07-06-09-48-53_model-1 model: assets/luca.bvh | resolution: 3 render mode: 2 | UB: 1024 RB: 512 TS: 500 TD: 3500

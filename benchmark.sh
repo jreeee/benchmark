@@ -1,16 +1,30 @@
 #! /bin/bash
 
+# ------------------------ args
+# in frames
+TEST_START=500
+TEST_DURATION=5000
+# in MB
+RENDER_BUDGET=1024
+
+SLEEP=10 # seconds
+UPLOAD_BUDGET=1024
+RAM_BUDGET=8192 #16384
+
+# -------------------------
+
 BASE_DIR="$HOME/git/plamure"
 WORKING_DIR="$BASE_DIR/install/bin"
-MODEL_1="assets/Modell_Ruine.bvh"
+MODEL_1="assets/luca.bvh" # Modell_Ruine.bvh"
 MODEL_2="assets/Schiefer_Turm_part_200M_00001_knobi.bvh"
 MODEL_3="assets/statue.bvh"
 MODEL_4="assets/Schulgebaeude.bvh"
 BENCH_BASE_DIR="$HOME/git/benchmark"
-BENCH_LOGS="$BENCH_BASE_DIR/logs"
+BENCH_LOGS="$BENCH_BASE_DIR/$1/logs"
 BENCH_DATA="$BENCH_BASE_DIR/data"
-BENCH_GRAPHS="$BENCH_BASE_DIR/graphs"
+BENCH_GRAPHS="$BENCH_BASE_DIR/$1/graphs"
 BENCH_TMP="$BENCH_BASE_DIR/tmp"
+TEMPLATE_DIR="$BENCH_BASE_DIR/graphs"
 
 RESOLUTION_1="--sc_x=1280 --sc_y=720"
 RESOLUTION_2="--sc_x=1920 --sc_y=1080"
@@ -18,16 +32,6 @@ RESOLUTION_3="--sc_x=2560 --sc_y=1440"
 RESOLUTION_4="--sc_x=3840 --sc_y=2160"
 RESOLUTION_5="--sc_x=5120 --sc_y=3200"
 
-REN_MODE=1
-
-# frames
-TEST_START=1000 # should be over 50 to avoid irrelevant stdout
-TEST_DURATION=5000
-# seconds
-SLEEP=10
-UPLOAD_BUDGET=1024
-RENDER_BUDGET=1024 # cant be greater than this atm bc gl refining not using all that is available
-RAM_BUDGET=16384
 
 rebuild () {
     cd "$BASE_DIR"
@@ -96,6 +100,9 @@ render-gl () {
     else
         exit 2
     fi
+    echo "[info][gl] removing impossible frametimes"
+    grep "+13" "$logfile"
+    sed -i '/e+13/d' "$logfile"
 }
 
 graph-data () {
@@ -110,8 +117,8 @@ graph-data () {
     # todo grab data from the info and transfer it here
     graph_file="$BENCH_TMP/graph-$1.dat"
     info_file="$BENCH_LOGS/info-$1.log"
-    cp "$BENCH_GRAPHS/template-bin-hist.dat" "$graph_file"
-    sed -i 's/FILENAME/'$1'/g' "$graph_file"
+    cp "$TEMPLATE_DIR/template-bin-hist.dat" "$graph_file"
+    sed -i 's!FILENAME!'$BENCH_GRAPHS'/graph-'$1'!g' "$graph_file"
     #sed -i 's/TITLE/'$(cat $info_file)'/g' "$graph_file"
     sed -i 's?INFILE1?vk-'$1'.tmp?g' "$graph_file"
     sed -i 's!INFILE2!gl-'$1'.tmp!g' "$graph_file"
@@ -122,6 +129,7 @@ graph-data () {
 } 
 
 bench-variants () {
+
     loginfo="$BENCH_LOGS/info-$2.log"
     echo "run: $2 model: $1 | resolution: $3 render mode: $4 | UB: $UPLOAD_BUDGET RB: $RENDER_BUDGET TS: $TEST_START TD: $TEST_DURATION" >> $loginfo
     cat $loginfo
@@ -142,6 +150,16 @@ bench-variants () {
 
 
 main () {
+
+    if [ ! -d "$BENCH_TMP" ]; then
+        mkdir "$BENCH_TMP"
+    fi
+
+    if [ ! -d "$1" ]; then
+        mkdir "$1"
+        mkdir "$BENCH_GRAPHS"
+        mkdir "$BENCH_LOGS"
+    fi
     # MAX=2048
     RUN=1
 
@@ -151,24 +169,36 @@ main () {
         for j in $(seq 1 3);
         do
             echo "[info] starting run $RUN from $RUNS with $RENDER_BUDGET"
-            # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-1
-            # bench-variants $MODEL_1 $log_stamp $i $j
+
+            log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-1
+            bench-variants $MODEL_1 $log_stamp $i $j
             # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-2
             # bench-variants $MODEL_2 $log_stamp $i $j
             # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-3
             # bench-variants $MODEL_3 $log_stamp $i $j
-            log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-4
-            bench-variants $MODEL_4 $log_stamp $i $j
+            # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-4
+            # bench-variants $MODEL_4 $log_stamp $i $j
             RUN=$((RUN + 1))
         done
-    #     
-	# # pkill gnuplot_qt
-    #     RENDER_BUDGET=$((RENDER_BUDGET * 2))
     done
+
+    cd "$BENCH_BASE_DIR"
+    echo "[info] final plots"
+    eval "./plot.sh" "$1"
+    echo "[info] finished"
 }
 
-if [ $# -gt "0" ]; then
+if [ $# -lt "1" ]; then
+    echo "[error] need at least the dir arg"
+    exit 1
+
+elif [ $# -eq "2" ]; then
     rebuild
+
+elif [ $# -eq "4" ]; then
+    TEST_START="$2"
+    TEST_DURATION="$3"
+    RENDER_BUDGET="$4"
 fi
 
-main
+main "$1"
