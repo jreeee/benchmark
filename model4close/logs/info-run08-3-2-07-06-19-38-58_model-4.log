@@ -1,0 +1,1 @@
+run: run08-3-2-07-06-19-38-58_model-4 model: assets/Schulgebaeude.bvh | resolution: 3 render mode: 2 | UB: 1024 RB: 1024 TS: 500 TD: 5000

@@ -1,0 +1,1 @@
+run: run02-1-2-07-06-17-34-42_model- model: assets/statue.bvh | resolution: 1 render mode: 2 | UB: 1024 RB: 1024 TS: 500 TD: 5000

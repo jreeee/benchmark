@@ -1,0 +1,33 @@
+
+* FILE: 
+  Records:           5001
+  Out of range:         0
+  Invalid:              0
+  Header records:       0
+  Blank:                0
+  Data Blocks:          1
+
+* COLUMN: 
+  Mean:               0.6774
+  Std Dev:            0.0132
+  Sample StdDev:      0.0132
+  Skewness:         -19.8342
+  Kurtosis:         400.6168
+  Avg Dev:            0.0019
+  Sum:             3387.6808
+  Sum Sq.:         2295.6834
+
+  Mean Err.:          0.0002
+  Std Dev Err.:       0.0001
+  Skewness Err.:      0.0346
+  Kurtosis Err.:      0.0693
+
+  Minimum:            0.4106 [   0]
+  Maximum:            0.6820 [2919]
+  Quartile:           0.6779 
+  Median:             0.6779 
+  Quartile:           0.6789 
+
+"tmp/graph-run01-1-1-07-06-18-04-58_model-3.dat" line 10: warning: No valid data points found in file
+"tmp/graph-run01-1-1-07-06-18-04-58_model-3.dat" line 11: undefined variable: STATS_lo_quartile
+

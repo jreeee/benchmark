@@ -10,12 +10,13 @@ RENDER_BUDGET=1024
 SLEEP=10 # seconds
 UPLOAD_BUDGET=1024
 RAM_BUDGET=8192 #16384
+MODEL_NUM=1
 
 # -------------------------
 
 BASE_DIR="$HOME/git/plamure"
 WORKING_DIR="$BASE_DIR/install/bin"
-MODEL_1="assets/luca.bvh" # Modell_Ruine.bvh"
+MODEL_1="assets/Modell_Ruine.bvh"
 MODEL_2="assets/Schiefer_Turm_part_200M_00001_knobi.bvh"
 MODEL_3="assets/statue.bvh"
 MODEL_4="assets/Schulgebaeude.bvh"
@@ -78,9 +79,13 @@ render-vk () {
     else
         exit 2
     fi
-    echo "[info][vk] removing impossible frametimes"
-    grep "+13" "$logfile"
-    sed -i '/e+13/d' "$logfile"
+
+    error="$(grep "+13" "$logfile")" 
+    if [ "$error" != "" ]; then
+        echo "[info][vk] removing impossible frametimes"
+        echo "$logfile: $error" >> "$BENCH_BASE_DIR/error"
+        sed -i '/e+13/d' "$logfile"
+    fi
 }
 
 render-gl () {
@@ -100,9 +105,13 @@ render-gl () {
     else
         exit 2
     fi
-    echo "[info][gl] removing impossible frametimes"
-    grep "+13" "$logfile"
-    sed -i '/e+13/d' "$logfile"
+
+    error="$(grep "+13" "$logfile")"
+    if [ "$error" != "" ]; then
+        echo "[info][gl] removing impossible frametimes"
+        echo "$logfile: $error" >> "$BENCH_BASE_DIR/error"
+        sed -i '/e+13/d' "$logfile"
+    fi
 }
 
 graph-data () {
@@ -160,8 +169,17 @@ main () {
         mkdir "$BENCH_GRAPHS"
         mkdir "$BENCH_LOGS"
     fi
-    # MAX=2048
+
+    case $MODEL_NUM in
+        1) model="$MODEL_1";;
+        2) model="$MODEL_2";;
+        3) model="$MODEL_3";;
+        4) model="$MODEL_4";;
+        *) model="$MODEL_NUM";;
+    esac    
+
     RUN=1
+    pad="0"
 
     for i in $(seq 1 5);
         do
@@ -170,15 +188,12 @@ main () {
         do
             echo "[info] starting run $RUN from $RUNS with $RENDER_BUDGET"
 
-            log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-1
-            bench-variants $MODEL_1 $log_stamp $i $j
-            # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-2
-            # bench-variants $MODEL_2 $log_stamp $i $j
-            # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-3
-            # bench-variants $MODEL_3 $log_stamp $i $j
-            # log_stamp=run$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-4
-            # bench-variants $MODEL_4 $log_stamp $i $j
+            log_stamp=run$pad$RUN-$i-$j-$(date +%m-%d-%H-%M-%S)_model-$MODEL_NUM
+            bench-variants $model $log_stamp $i $j
             RUN=$((RUN + 1))
+            if [ $RUN -gt "9" ]; then
+                pad=""
+            fi
         done
     done
 
@@ -188,17 +203,23 @@ main () {
     echo "[info] finished"
 }
 
-if [ $# -lt "1" ]; then
-    echo "[error] need at least the dir arg"
-    exit 1
-
-elif [ $# -eq "2" ]; then
+if [ $# -eq "0" ]; then
     rebuild
+    exit 0
 
-elif [ $# -eq "4" ]; then
+elif [ $# -eq "1" ]; then
+    cd $WORKING_DIR
+    ./unity_dummy ../../$1
+    exit 0
+
+elif [ $# -gt "3" ]; then
     TEST_START="$2"
     TEST_DURATION="$3"
     RENDER_BUDGET="$4"
+fi
+
+if [ $# -eq "5" ]; then
+    MODEL_NUM="$5"
 fi
 
 main "$1"

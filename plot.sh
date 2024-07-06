@@ -15,7 +15,7 @@ cd "$WORKING_DIR"
 if [ ! -d "$RES_DIR" ]; then
     mkdir "$RES_DIR"
 else 
-    rm -rm "$RES_DIR/*"
+    rm "$RES_DIR/*"
 fi
 
 cd graphs
