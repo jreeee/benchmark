@@ -18,7 +18,7 @@ reset
 #function used to map a value to the intervals
 #hist(x,width)=width*floor(x/width)+width/2.0
 set term png #output terminal and file
-set output "/home/jre/git/benchmark/model1close/graph-1.png"
+set output "/home/jre/git/benchmark/plot/graph-model1close-1.png"
 #set xrange [min:max]
 set yrange [0:]
 set xrange [720:]
