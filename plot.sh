@@ -14,8 +14,6 @@ cd "$WORKING_DIR"
 
 if [ ! -d "$RES_DIR" ]; then
     mkdir "$RES_DIR"
-else 
-    rm "$RES_DIR/*"
 fi
 
 cd graphs
@@ -37,13 +35,13 @@ do
         # trigger recompute for too high vals?
         
         mean=($(grep "Mean:" "${files[(( $j - 1 ))]}" | cut -d":" -f 2 | sed 's/ //g' ))
-        #quarts=($(grep "Quartile:" "${files[(( $j - 1 ))]}" | cut -d":" -f 2 | sed 's/ //g' ))
+        quarts=($(grep "Quartile:" "${files[(( $j - 1 ))]}" | cut -d":" -f 2 | sed 's/ //g' ))
         # echo "${RESOLUTION[(( $j - 1 ))]} ${quarts[0]} ${mean[0]} ${quarts[1]}  ${quarts[2]} ${mean[1]} ${quarts[3]}" >> "../g-data-$i.txt"
         max=($(grep Max "${files[(( $j - 1 ))]}" | cut -d":" -f 2 | sed 's/ //g' | sed 's/\[.*//g'))
         min=($(grep Min "${files[(( $j - 1 ))]}" | cut -d":" -f 2 | sed 's/ //g' | sed 's/\[.*//g'))
         #echo ${min[@]} ${max[@]}
-        # storing resolution (vulkan 1, avg, 2,) (gl  1, avg, 2)
-        echo "${RESOLUTION[(( $j - 1 ))]} ${min[0]} ${mean[0]} ${max[0]}  ${min[1]} ${mean[1]} ${max[1]}" >> "$file_data"
+        # storing format: resolution (vulkan avg, min, max, q1, q2) (gl avg, min, max, q1, q2)  
+        echo "${RESOLUTION[(( $j - 1 ))]} ${mean[0]} ${min[0]} ${max[0]} ${quarts[0]} ${quarts[1]}  ${mean[1]} ${min[1]} ${max[1]} ${quarts[2]} ${quarts[3]}" >> "$file_data"
     done
 
     echo $file_data " " $file_graph

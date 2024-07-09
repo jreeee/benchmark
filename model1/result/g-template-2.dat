@@ -21,17 +21,21 @@ set term png #output terminal and file
 set output "/home/jre/git/benchmark/model1/graph-2.png"
 #set xrange [min:max]
 set yrange [0:]
+set xrange [720:]
 
 #set tics out nomirror
-#set xlabel "resolution width in pixel"
+set xlabel "resolution width in px"
 set ylabel "frametime in ms"
 #count and plot
 # file using hist(2nd col, width)
 
-plot "/home/jre/git/benchmark/model1/result/g-data-2.txt" u 1:2:4 w filledcurves lc rgb"#70D73F0A" title "Vulkan min/max",\
-     "" u 1:3 w lines lc rgb"#20BA0909" title "Vulkan average",\
-     "" u 1:5:7 w filledcurves lc  rgb"#701772C6" title "OpenGL min/max",\
-     "" u 1:6 w lines lc rgb"#200909BA" title "OpenGL average"
+# res avg min max q1 g2, avg min max q1 q2
+plot "/home/jre/git/benchmark/model1/result/g-data-2.txt" u 1:5:6 w filledcurves lc rgb"#50BA0909" title "Vulkan quartiles",\
+     "" u 1:2 w lines lc rgb"#10BA0909" title "Vulkan average",\
+     "" u 1:3:4 w filledcurves lc rgb"#80D73F0A" title "Vulkan min/max",\
+     "" u 1:11:10 w filledcurves lc  rgb"#500909BA" title "OpenGL quartiles",\
+     "" u 1:7 w lines lc rgb"#100909BA" title "OpenGL average",\
+     "" u 1:8:9 w filledcurves lc rgb"#801772C6" title "OpenGL min/max"
 
 set terminal pop
 set output
