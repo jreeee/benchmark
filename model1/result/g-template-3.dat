@@ -24,18 +24,14 @@ set yrange [0:]
 set xrange [720:]
 
 #set tics out nomirror
-set xlabel "resolution width in px"
-set ylabel "frametime in ms"
+# set xlabel "resolution width in px"
+# set ylabel "frametime in ms"
 #count and plot
 # file using hist(2nd col, width)
 
 # res avg min max q1 g2, avg min max q1 q2
-plot "/home/jre/git/benchmark/model1/result/g-data-3.txt" u 1:5:6 w filledcurves lc rgb"#50BA0909" title "Vulkan quartiles",\
-     "" u 1:2 w lines lc rgb"#10BA0909" title "Vulkan average",\
-     "" u 1:3:4 w filledcurves lc rgb"#80D73F0A" title "Vulkan min/max",\
-     "" u 1:11:10 w filledcurves lc  rgb"#500909BA" title "OpenGL quartiles",\
+plot "/home/jre/git/benchmark/model1/result/g-data-3.txt" u 1:2 w lines lc rgb"#10BA0909" title "Vulkan average",\
      "" u 1:7 w lines lc rgb"#100909BA" title "OpenGL average",\
-     "" u 1:8:9 w filledcurves lc rgb"#801772C6" title "OpenGL min/max"
 
 set terminal pop
 set output

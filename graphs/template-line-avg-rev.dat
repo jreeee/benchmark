@@ -1,0 +1,38 @@
+reset
+
+#number of intervals, could be like frames/20?
+#n=200 
+
+#minmaxing
+#stats "tmp/INFILE1" u 2
+#min=STATS_lo_quartile
+#max=STATS_up_quartile
+#stats "tmp/INFILE2" u 2
+#if (min > STATS_lo_quartile) min=STATS_lo_quartile
+#if (max < STATS_up_quartile) max=STATS_up_quartile
+#min=(min-.2)
+#max=(max+.2)
+
+#width=(max-min)/n #interval width
+#ofs=width/4
+#function used to map a value to the intervals
+#hist(x,width)=width*floor(x/width)+width/2.0
+set term png #output terminal and file
+set output "OUTFILE"
+#set xrange [min:max]
+set yrange [0:]
+set xrange [720:]
+
+#set tics out nomirror
+# set xlabel "resolution width in px"
+# set ylabel "frametime in ms"
+#count and plot
+# file using hist(2nd col, width)
+
+# res avg min max q1 g2, avg min max q1 q2
+plot "INFILE" u 1:2 w lines lc rgb"#10BA0909" title "Vulkan average",\
+     "" u 1:7 w lines lc rgb"#100909BA" title "OpenGL average",\
+
+set terminal pop
+set output
+replot
